@@ -1,6 +1,7 @@
 version: 1
 
 rules:
+  # --- Zero-dependency pattern rules: run with `npx archsentry scan`, no extras ---
   - id: no-direct-sql
     type: pattern
     severity: error
@@ -34,12 +35,24 @@ rules:
       exclude:
         - "**/*.test.ts"
 
+  # --- AST-aware Semgrep rule: runs when the Semgrep CLI is installed ---
+  # Services may not call .query() directly — that belongs in a repository.
+  - id: services-use-repositories
+    type: semgrep
+    severity: error
+    description: "Services must access persistence through repositories."
+    semgrep:
+      languages: ["typescript"]
+      paths:
+        include: ["src/services/**/*.ts"]
+      pattern: $DB.query(...)
+
   - id: no-raw-dangerous-eval
     type: semgrep
     severity: error
     description: "Do not call eval() or the Function constructor in product code."
     semgrep:
       languages: ["typescript", "javascript"]
-      "pattern-either":
+      pattern-either:
         - pattern: eval(...)
         - pattern: new Function(...)

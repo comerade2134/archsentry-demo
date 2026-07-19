@@ -1,0 +1,7 @@
+{
+  "name": "archsentry-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sample target repo for ArchSentry (deterministic architecture enforcement)",
+  "license": "MIT"
+}
